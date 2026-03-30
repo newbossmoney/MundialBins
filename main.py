@@ -4,15 +4,23 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 # ==============================
-# 🔐 CONFIGURACIÓN
+# 🔍 DEBUG VARIABLES
 # ==============================
+
+print("🔍 VARIABLES DE ENTORNO DISPONIBLES:")
+for key in os.environ:
+    print(f"{key} = {os.environ[key]}")
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-if not BOT_TOKEN:
-    raise ValueError("❌ ERROR: BOT_TOKEN no está configurado en Railway")
+print("🔑 TOKEN DETECTADO:", BOT_TOKEN)
 
-print("✅ TOKEN CARGADO:", BOT_TOKEN[:10], "...")  # muestra solo parte por seguridad
+# ==============================
+# 🚨 VALIDACIÓN FUERTE
+# ==============================
+
+if not BOT_TOKEN or BOT_TOKEN.strip() == "":
+    raise ValueError("❌ ERROR: BOT_TOKEN no está configurado en Railway o está vacío")
 
 # ==============================
 # 🧾 LOGS
@@ -30,7 +38,7 @@ logging.basicConfig(
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🔥 Bot activo y funcionando correctamente\n\n"
-        "Usa los comandos para interactuar."
+        "Ya estamos listos para el siguiente nivel 🚀"
     )
 
 # ==============================
@@ -38,12 +46,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ==============================
 
 def main():
+    print("🚀 Iniciando bot...")
+
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     # comandos
     app.add_handler(CommandHandler("start", start))
 
-    print("🚀 Bot iniciado correctamente...")
+    print("✅ Bot corriendo correctamente...")
 
     app.run_polling()
 
